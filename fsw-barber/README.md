@@ -3,7 +3,11 @@
 - [X] Database setup
 - [X] DB seeding
 - [X] Next introduction
-- [] Tailwind and Shadcn
+- [X] Tailwind and Shadcn
+- [] Githooks: The githooks, for example, let's say we have a team of developers. We have our prettier and eslint configs
+on our project, and if we save a file, we format it, eslint will point us the errors and so on, but if one of the other
+devs don't have those same extensions, he can upload a file which has not been formatted, and for it we utilize the git
+hooks, for us to run prettier and eslint BEFORE EACH commit. Which will be utilized the library husky
 
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
