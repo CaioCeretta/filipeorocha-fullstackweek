@@ -9,21 +9,28 @@ import React from 'react'
 import { Input } from './_components/ui/input'
 import { SearchIcon } from 'lucide-react'
 import Image from 'next/image'
+import { Card, CardContent } from './_components/ui/card'
+import { Badge } from './_components/ui/badge'
+import { Avatar, AvatarImage } from './_components/ui/avatar'
 
 export default function Home() {
   return (
     <div>
       {/* Header */}
       <Header />
+
       <div className="p-5">
+        {/* Text */}
         <h2 className="text-xl">Hello, Caio</h2>
         <p>Monday, August 5th. 2024</p>
+        {/* Search */}
         <div className="mt-6 flex items-center gap-2">
           <Input placeholder="Search"></Input>
           <Button>
             <SearchIcon />
           </Button>
         </div>
+        {/* Image */}
         <div className="relative mt-6 h-[150px] w-full">
           <Image
             alt="Book with the best barbers in the region"
@@ -32,7 +39,29 @@ export default function Home() {
             className="rounded-xl bg-center object-cover"
           />
         </div>
-        k
+        {/* Bookings */}
+        <Card className="mt-6">
+          <CardContent className="flex justify-between p-0">
+            {/* Left */}
+            <div className="flex flex-col gap-2 py-5 pl-5">
+              <Badge className="w-fit">Confirmed</Badge>
+              <h3 className="font-bold">Haircut</h3>
+
+              <div className="flex items-center gap-2">
+                <Avatar className="h-6 w-6">
+                  <AvatarImage src="https://utfs.io/f/c97a2dc9-cf62-468b-a851-bfd2bdde775f-16p.png" />
+                </Avatar>
+                <p className="text-sm">FSW Barber Shop</p>
+              </div>
+            </div>
+            {/* Right */}
+            <div className="flex flex-col items-center justify-center border-l-2 border-solid px-5">
+              <p className="text-sm">August</p>
+              <p className="text-2xl font-bold">05</p>
+              <p className="text-sm">21:00</p>
+            </div>
+          </CardContent>
+        </Card>
       </div>
     </div>
   )
