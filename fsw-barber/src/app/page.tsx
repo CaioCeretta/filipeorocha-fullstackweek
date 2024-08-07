@@ -12,6 +12,9 @@ import { Badge } from './_components/ui/badge'
 import { Card, CardContent } from './_components/ui/card'
 import { Input } from './_components/ui/input'
 import { db } from './_lib/prisma'
+import { quickSearchOptions } from './_constants/search'
+import BookingItem from './_components/booking-item'
+
 
 export default async function Home() {
 
@@ -43,30 +46,13 @@ export default async function Home() {
 
         {/* Quick Search */}
         <div className="mt-6 flex items-center gap-3 overflow-x-scroll [&::-webkit-scrollbar]:hidden">
-          <Button className='gap-2' variant={'secondary'}>
-            <Image src="/cabelo.svg" width={16} height={16} alt='Hair' />
-            Hair
+          {quickSearchOptions.map(option => (
+            <Button className='gap-2' variant={'secondary'}>
+              <Image src={option.imageUrl} width={16} height={16} alt={option.title} />
+              {option.title}
             </Button>
+          ))}
 
-          <Button className='gap-2' variant={'secondary'}>
-            <Image src="/barba.svg" width={16} height={16} alt='Beard' />
-            Beard
-          </Button>
-
-          <Button className='gap-2' variant={'secondary'}>
-            <Image src="/acabamento.svg" width={16} height={16} alt='Finish' />
-            Finishing
-          </Button>
-
-          <Button className='gap-2' variant={'secondary'}>
-            <FootprintsIcon className="w-4 h-4"  />
-            Outline
-          </Button>
-
-          <Button className='gap-2' variant={'secondary'}>
-            <EyeIcon className="w-4 h-4"/>
-            Eyebrows
-          </Button>
 
         </div>
 
@@ -80,30 +66,9 @@ export default async function Home() {
             className="rounded-xl bg-center object-cover"
           />
         </div>
-        {/* Bookings */}
-        <h2 className='mb-3 mt-6 text-xs font-bold uppercase text-gray-400k'>Bookins</h2>
-        <Card className="max-w-full min-w-full">
-          <CardContent className="flex justify-between p-0">
-            {/* Left */}
-            <div className="flex flex-col gap-2 py-5 pl-5">
-              <Badge className="w-fit">Confirmed</Badge>
-              <h3 className="font-bold">Haircut</h3>
 
-              <div className="flex items-center gap-2">
-                <Avatar className="h-6 w-6">
-                  <AvatarImage src="https://utfs.io/f/c97a2dc9-cf62-468b-a851-bfd2bdde775f-16p.png" />
-                </Avatar>
-                <p className="text-sm">FSW Barber Shop</p>
-              </div>
-            </div>
-            {/* Right */}
-            <div className="flex flex-col items-center justify-center border-l-2 border-solid px-5">
-              <p className="text-sm">August</p>
-              <p className="text-2xl font-bold">05</p>
-              <p className="text-sm">21:00</p>
-            </div>
-          </CardContent>
-        </Card>
+        {/* Bookings */}
+        <BookingItem />
 
         <h2 className='mb-3 mt-6 text-xs font-bold uppercase text-gray-400'>Recommended</h2>
         <div className='flex gap-4 overflow-auto [&::-webkit-scrollbar]:hidden'>
