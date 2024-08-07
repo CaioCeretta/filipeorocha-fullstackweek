@@ -1,3 +1,4 @@
+import ServiceItem from "@/app/_components/service-item";
 import { Button } from "@/app/_components/ui/button";
 import { db } from "@/app/_lib/prisma";
 import { ChevronLeftIcon, MapPinIcon, MenuIcon, StarIcon } from "lucide-react";
@@ -10,9 +11,12 @@ const BarbershopPage = async ({ params }: { params: { id: 'string' } }) => {
   const barbershop = await db.barbershop.findUnique({
     where: {
       id: params.id
+    },
+    include: {
+      services: true
     }
   })
-
+  
   /* One other options to not use that barbershop ? ( ...
   
   would be to check if it is inexistent before and just return a notFound from next, it would also work
@@ -55,6 +59,20 @@ const BarbershopPage = async ({ params }: { params: { id: 'string' } }) => {
             <h2 className="font-bold uppercase text-gray-400 text-xs">About Us</h2>
             <p className="justify">{barbershop.description}</p>
 
+          </div>
+
+          {/*Description*/}
+          <div className="p-5">
+            <h2 className="text-xs font-bold uppercase text-gray-400">About us</h2>
+            <p>{barbershop.description}</p>
+          </div>
+          <div className="p-5 space-y-3">
+            <h2 className="text-xs font-bold uppercase text-gray-400">Services</h2>
+            <div className="space-y-3">
+              {barbershop.services.map(service => (
+                <ServiceItem key={service.id} service={service} />
+              ))}
+            </div>
           </div>
         </div>
       ) : (
