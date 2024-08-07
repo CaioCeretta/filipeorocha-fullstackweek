@@ -10,5 +10,18 @@ by doing something like, if it exceeds one line, to put 3 dots onto it, by doing
 of the text to be hidden and the line to not wrap, making it occupy one line, and the text-ellipsis will create the 3 dots
 for us, tailwind has a class which do these 3 things automatically, the truncate class
 
+
+##Example 2
+
 One thing other thing to know is that if the parent has, for example, 1000px width and the child has the outer div of its
 component of 200px, if 10 elements inside that div render, it will cause the parent div to overflow
+
+## Example 3
+
+In cases where we need to utilize on the same file something we need to use async await and also a user interaction we
+need to separate where we need the interaction to another client component.
+
+So in next we have this design, where we have a server component but we also need user interaction, so we create a component
+with the useClient, handle all the interactions on it, and call that component on a server side component
+
+
