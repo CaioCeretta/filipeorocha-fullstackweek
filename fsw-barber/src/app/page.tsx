@@ -11,6 +11,7 @@ import BookingItem from './_components/booking-item'
 import { Input } from './_components/ui/input'
 import { quickSearchOptions } from './_constants/search'
 import { db } from './_lib/prisma'
+import Search from './_components/search'
 
 
 export default async function Home() {
@@ -33,13 +34,7 @@ export default async function Home() {
         <h2 className="text-xl">Hello, Caio</h2>
         <p>Monday, August 5th. 2024</p>
         {/* Search */}
-        <div className="mt-6 flex items-center gap-2 ">
-          <Input placeholder="Search"></Input>
-          <Button>
-            <SearchIcon />
-          </Button>
-        </div>
-
+        <Search />
         {/* Quick Search */}
         <div className="mt-6 flex items-center gap-3 overflow-x-scroll [&::-webkit-scrollbar]:hidden">
           {quickSearchOptions.map(option => (

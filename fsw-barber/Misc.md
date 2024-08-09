@@ -56,5 +56,26 @@ then, we need to populate those clientId and clientSecret, what we need to do is
 
   and utilize that function as a button onClick, simple as that
 
+## Full height of the cildren with footer and header on screen
+
+for it we would add on the layout, for example, this
+
+<body className={inter.className} >
+        <AuthProvider>
+          <div className="flex flex-col h-full">
+            <div className='flex-1'>{children}</div>
+            <Footer />
+          </div>
+        </AuthProvider>
+        <Toaster />
+
+      </body>
+
+Then on the globals.css, on the @layer base;
+
+apply the classes h-full for the body and the html
+
+
+
 
 

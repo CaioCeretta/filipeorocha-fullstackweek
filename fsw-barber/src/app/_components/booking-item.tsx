@@ -8,7 +8,7 @@ const BookingItem = () => {
   return (
     <>
       {/* Bookings */}
-      <h2 className='mb-3 mt-6 text-xs font-bold uppercase text-gray-400k'>Bookins</h2>
+      <h2 className='mb-3 mt-6 text-xs font-bold uppercase text-gray-400k'>Bookings</h2>
       <Card className="max-w-full min-w-full">
         <CardContent className="flex justify-between p-0">
           {/* Left */}
