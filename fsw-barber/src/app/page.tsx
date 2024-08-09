@@ -4,16 +4,13 @@ import Header from './_components/header'
 
 import { Button } from './_components/ui/button'
 
-import { EyeIcon, FootprintsIcon, SearchIcon } from 'lucide-react'
+import { SearchIcon } from 'lucide-react'
 import Image from 'next/image'
 import BarberShopItem from './_components/barbershop-item'
-import { Avatar, AvatarImage } from './_components/ui/avatar'
-import { Badge } from './_components/ui/badge'
-import { Card, CardContent } from './_components/ui/card'
-import { Input } from './_components/ui/input'
-import { db } from './_lib/prisma'
-import { quickSearchOptions } from './_constants/search'
 import BookingItem from './_components/booking-item'
+import { Input } from './_components/ui/input'
+import { quickSearchOptions } from './_constants/search'
+import { db } from './_lib/prisma'
 
 
 export default async function Home() {
@@ -25,7 +22,6 @@ export default async function Home() {
     }
   })
 
-  console.log({ barbershops })
 
   return (
     <div>
@@ -87,7 +83,6 @@ export default async function Home() {
 
       </div>
 
-      {/* Footer */}
 
 
     </div>

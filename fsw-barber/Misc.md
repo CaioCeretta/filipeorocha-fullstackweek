@@ -25,7 +25,7 @@ So in next we have this design, where we have a server component but we also nee
 with the useClient, handle all the interactions on it, and call that component on a server side component
 
 
-## Example 4
+## Example 4 (Next Auth)
 
 When we need to utilize the any auth with prisma, we need to install a @auth/prisma-adapter library to work together
 with it.
@@ -49,4 +49,12 @@ const handler = NextAuth({
 })
 
 export { handler as GET, handler as POST }
+
+then, we need to populate those clientId and clientSecret, what we need to do is to enter the google developer console, inside of it create our project, generate our oAuthKeys, and then, utilize them as those credentials, we will now be able to use the google authorization, and an example of one function which would call google to get the user login and password is:   const handleLoginWithGoogleClick = async () => {
+    await signIn("google")
+  }
+
+  and utilize that function as a button onClick, simple as that
+
+
 
