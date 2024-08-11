@@ -4,7 +4,7 @@ import Header from './_components/header'
 
 import { Button } from './_components/ui/button'
 
-import { SearchIcon } from 'lucide-react'
+import { Link, SearchIcon, Sheet } from 'lucide-react'
 import Image from 'next/image'
 import BarberShopItem from './_components/barbershop-item'
 import BookingItem from './_components/booking-item'
@@ -12,6 +12,7 @@ import { Input } from './_components/ui/input'
 import { quickSearchOptions } from './_constants/search'
 import { db } from './_lib/prisma'
 import Search from './_components/search'
+import { SheetClose } from './_components/ui/sheet'
 
 
 export default async function Home() {
@@ -36,12 +37,15 @@ export default async function Home() {
         {/* Search */}
         <Search />
         {/* Quick Search */}
+        
         <div className="mt-6 flex items-center gap-3 overflow-x-scroll [&::-webkit-scrollbar]:hidden">
           {quickSearchOptions.map(option => (
-            <Button className='gap-2' variant={'secondary'}>
-              <Image src={option.imageUrl} width={16} height={16} alt={option.title} />
-              {option.title}
-            </Button>
+              <Button className='gap-2' variant={'secondary'} >
+                <Link href={`/barbershops?service=${option.title}`}>
+                  <Image src={option.imageUrl} width={16} height={16} alt={option.title} />
+                  {option.title}
+                </Link>
+              </Button>
           ))}
 
 

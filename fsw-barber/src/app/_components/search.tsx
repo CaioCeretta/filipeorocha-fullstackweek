@@ -16,7 +16,7 @@ interface SearchProps {
 }
 
 const searchFormSchema = z.object({
-  search: z.string().trim().min(1, 'Type something to search')
+  title: z.string().trim().min(1, 'Type something to search')
 })
 
 type searchFormInputs = z.infer<typeof searchFormSchema>
@@ -27,14 +27,14 @@ const Search = () => {
   const form = useForm<searchFormInputs>({
     resolver: zodResolver(searchFormSchema),
     defaultValues: {
-      search: ""
+      title: ""
     }
   })
 
   const router = useRouter();
 
   const handleSearchSubmit = (data: searchFormInputs) => {
-    router.push(`barbershops?search=${data.search}`)
+    router.push(`barbershops?title=${data.title}`)
   }
 
 
@@ -44,11 +44,11 @@ const Search = () => {
         <form onSubmit={form.handleSubmit(handleSearchSubmit)} className="flex gap-4">
           <FormField
             control={form.control}
-            name="search"
+            name="title"
             render={({field}) => (
               <FormItem className="w-full">
                 <FormControl>
-                  <Input className="w-full" placeholder="Search" {...form.register('search')} />
+                  <Input className="w-full" placeholder="Search" {...form.register('title')} />
                 </FormControl>
 
                 <FormMessage />

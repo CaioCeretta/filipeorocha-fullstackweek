@@ -76,6 +76,35 @@ Then on the globals.css, on the @layer base;
 apply the classes h-full for the body and the html
 
 
+## Example 5 - server actions explanation
+
+Let's use the service item component as an example, in this service i have a  button where i can submit a form as a post
+ which will lead to that booking being stored, but one thing we can notice is that to next, whenever we make an api call
+ such as the createBooking, next internally will create for us an http route, we can see that when we click on the submit
+ it will call a route, that will always be a post at the url action wer're on, that is an example of a server action that 
+ next translates it into an http route. 
+So basically a server action is an abstraction of a http call that next do for us, and that's why we are able to access server
+resources from a client component
+
+## Example 6 - Adding the user id to the next auth default object
+
+To do it, we need to on the /api/auth/[...nextauth]/route.ts file, here we are going to create a callbacks object with
+an async function named session and pass to it as arguments an object containing the session and the user, that function is
+called whenever we call the useSession(), so we need to say that the session.user is everything we have on the session.user
+name, email, etc, and that user of the parameter is the user from our db, that we configured when we sat up the next auth
+database tables in our schemas, that user has an id, so we pass to that session.user everything we have on the session.user
+PLUS the user.id. like this
+
+ callbacks: {
+    async session({session, user}) {
+      session.user = {
+        ...session.user,
+        id: user.id
+      }
+
+      return session
+    }
+  }
 
 
 
