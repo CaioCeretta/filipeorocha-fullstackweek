@@ -21,6 +21,18 @@ const BarbershopPage = async ({ params }: { params: { id: 'string' } }) => {
       services: true
     }
   })
+
+  if(!barbershop) return
+
+  const barbershopWithNumericPrice = {
+    ...barbershop,
+    services: barbershop.services.map((service) => (
+      {
+        ...service,
+        price: Number(service.price)
+      }
+    ))
+  }
   
   /* One other options to not use that barbershop ? ( ...
   

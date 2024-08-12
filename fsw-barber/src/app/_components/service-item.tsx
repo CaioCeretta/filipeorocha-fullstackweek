@@ -7,7 +7,7 @@ import { Calendar } from "./ui/calendar";
 import { Card, CardContent } from "./ui/card";
 import { Sheet, SheetClose, SheetContent, SheetFooter, SheetHeader, SheetTitle, SheetTrigger } from "./ui/sheet";
 
-import { format, set } from "date-fns";
+import { addDays, format, getTime, set } from "date-fns";
 import { enUS } from 'date-fns/locale';
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
@@ -52,6 +52,7 @@ const ServiceItem = ({ service, barbershop }: ServiceItemProps) => {
   const [selectedTime, setSelectedTime] = useState<string | undefined>(undefined)
 
   const [dayBookings, setDayBookings] = useState<Booking[]>([])
+  const [bookingSheetsIsOpen, setBookingSheetsIsOpen] = useState<boolean>(false)
 
   useEffect(() => {
     const fetch = async () => {
@@ -65,6 +66,13 @@ const ServiceItem = ({ service, barbershop }: ServiceItemProps) => {
     fetch()
   }, [selectedDay, service.id])
 
+  const handleBookingSheetOpenChange = () => {
+    setSelectedDay(undefined)
+    setSelectedTime(undefined)
+    setDayBookings([])
+    setBookingSheetsIsOpen(false)
+  }
+
   const handleDateSelect = (date: Date | undefined) => {
     setSelectedDay(date)
   }
@@ -72,6 +80,8 @@ const ServiceItem = ({ service, barbershop }: ServiceItemProps) => {
   const handleTimeSelect = (time: string) => {
     setSelectedTime(time)
   }
+
+
 
   const handleCreateBooking = async () => {
     // 1. Do not show booked hours
@@ -99,14 +109,41 @@ const ServiceItem = ({ service, barbershop }: ServiceItemProps) => {
           date: newDate
         }
       )
+
+      setBookingSheetsIsOpen(false)
+
       toast.success('Reservation successfully created')
     } catch (error) {
       console.log(error)
+
+      setBookingSheetsIsOpen(false)
+
       toast.error('Error while creating reservation')
     }
+
   }
 
-  console.log(dayBookings)
+  const getTimeList = (bookings: Booking[]) => {
+
+    return TIME_LIST.filter(time => {
+      const hour = Number(time.split(":")[0])
+      const minutes = Number(time.split(":")[1])
+
+      //Verifies if there is any reservation on that period of time
+      const hasBookingOnCurrentTime = (bookings.some(
+        booking =>
+          booking.date.getHours() === hour &&
+          booking.date.getMinutes() === minutes
+      )
+      )
+
+      if (hasBookingOnCurrentTime) {
+        return false
+      }
+
+      return true
+    })
+  }
 
   return (
     <>
@@ -127,10 +164,11 @@ const ServiceItem = ({ service, barbershop }: ServiceItemProps) => {
                 currency: 'USD'
               }).format(Number(service.price))}</p>
 
-              <Sheet>
-                <SheetTrigger asChild>
-                  <Button variant="secondary" size={'sm'}>Book</Button>
-                </SheetTrigger>
+              <Sheet open={bookingSheetsIsOpen} onOpenChange={handleBookingSheetOpenChange}>
+                <Button
+                  onClick={() => setBookingSheetsIsOpen(true)}
+                  variant="secondary" size={'sm'}>Book
+                </Button>
                 <SheetContent className="px-0">
                   <SheetHeader>
                     <SheetTitle>Make Reservation</SheetTitle>
@@ -139,6 +177,7 @@ const ServiceItem = ({ service, barbershop }: ServiceItemProps) => {
                   <div className="border-b border-solid py-5 w-full">
                     <Calendar
                       mode="single"
+                      fromDate={addDays(new Date(), 1)}
                       locale={enUS}
                       selected={selectedDay}
                       onSelect={handleDateSelect}
@@ -148,7 +187,7 @@ const ServiceItem = ({ service, barbershop }: ServiceItemProps) => {
 
                   {selectedDay && (
                     <div className="px-5 flex border-b border-solid overflow-x-auto p-5 gap-3 [&::-webkit-scrollbar]:hidden">
-                      {TIME_LIST.map(time => (
+                      {getTimeList(dayBookings).map(time => (
                         <Button
                           onClick={() => handleTimeSelect(time)}
                           key={time}
