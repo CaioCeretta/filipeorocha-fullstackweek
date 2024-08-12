@@ -11,15 +11,13 @@ import { SheetClose, SheetContent, SheetHeader, SheetTitle } from "./ui/sheet";
 // import { signIn, useSession } from "next-auth/react";
 import { Avatar, AvatarImage } from '@/app/_components/ui/avatar';
 import { signIn, signOut, useSession } from "next-auth/react";
+import SignInDialog from "./sign-in-dialog";
 
 
 const SidebarSheet = () => {
 
   const { data: session } = useSession()
 
-  const handleLoginWithGoogleClick = async () => {
-    await signIn("google")
-  }
 
   const handleLogOutClick = async () => {
     await signOut()
@@ -61,19 +59,7 @@ const SidebarSheet = () => {
               </DialogTrigger>
 
               <DialogContent className="flex w-[90%] items-center flex-col">
-                <DialogHeader>
-                  <DialogTitle>Log In into the Plataform</DialogTitle>
-
-                  <DialogDescription>
-                    Connect via your google account
-                  </DialogDescription>
-                </DialogHeader>
-
-                <Button onClick={handleLoginWithGoogleClick} className="gap-1 font-bold w-[90%]" variant={'outline'}>
-                  <Image src="/google.svg" alt="log in with google" width={18} height={18} />
-                  Google
-                </Button>
-
+                <SignInDialog />
               </DialogContent>
             </Dialog>
           </>

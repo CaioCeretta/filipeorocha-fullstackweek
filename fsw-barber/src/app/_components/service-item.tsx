@@ -5,15 +5,17 @@ import Image from "next/image";
 import { Button } from "./ui/button";
 import { Calendar } from "./ui/calendar";
 import { Card, CardContent } from "./ui/card";
-import { Sheet, SheetClose, SheetContent, SheetFooter, SheetHeader, SheetTitle, SheetTrigger } from "./ui/sheet";
+import { Sheet, SheetClose, SheetContent, SheetFooter, SheetHeader, SheetTitle } from "./ui/sheet";
 
-import { addDays, format, getTime, set } from "date-fns";
+import { addDays, format, set } from "date-fns";
 import { enUS } from 'date-fns/locale';
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { createBooking } from "../_actions/create-booking";
 import { getBookings } from "../_actions/get-bookings";
+import { Dialog, DialogContent } from "./ui/dialog";
+import SignInDialog from "./sign-in-dialog";
 
 interface ServiceItemProps {
   service: BarbershopService,
@@ -48,6 +50,7 @@ const ServiceItem = ({ service, barbershop }: ServiceItemProps) => {
 
   const { data: session } = useSession()
 
+  const [signInDialogIsOpen, setSignInDialogIsOpen] = useState<boolean>(false)
   const [selectedDay, setSelectedDay] = useState<Date | undefined>(undefined)
   const [selectedTime, setSelectedTime] = useState<string | undefined>(undefined)
 
@@ -65,6 +68,14 @@ const ServiceItem = ({ service, barbershop }: ServiceItemProps) => {
     }
     fetch()
   }, [selectedDay, service.id])
+
+  const handleBookingClick = () => {
+    if (session?.user) {
+      return setBookingSheetsIsOpen(true)
+    }
+    setSignInDialogIsOpen(true)
+
+  }
 
   const handleBookingSheetOpenChange = () => {
     setSelectedDay(undefined)
@@ -166,7 +177,7 @@ const ServiceItem = ({ service, barbershop }: ServiceItemProps) => {
 
               <Sheet open={bookingSheetsIsOpen} onOpenChange={handleBookingSheetOpenChange}>
                 <Button
-                  onClick={() => setBookingSheetsIsOpen(true)}
+                  onClick={handleBookingClick}
                   variant="secondary" size={'sm'}>Book
                 </Button>
                 <SheetContent className="px-0">
@@ -177,7 +188,7 @@ const ServiceItem = ({ service, barbershop }: ServiceItemProps) => {
                   <div className="border-b border-solid py-5 w-full">
                     <Calendar
                       mode="single"
-                      fromDate={addDays(new Date(), 1)}
+                      fromDate={new Date()}
                       locale={enUS}
                       selected={selectedDay}
                       onSelect={handleDateSelect}
@@ -248,6 +259,12 @@ const ServiceItem = ({ service, barbershop }: ServiceItemProps) => {
           </div>
         </CardContent>
       </Card>
+
+      <Dialog open={signInDialogIsOpen} onOpenChange={(open) => setSignInDialogIsOpen(open)}>
+        <DialogContent className="w-[90%]">
+          <SignInDialog />
+        </DialogContent>
+      </Dialog>
     </>
   );
 }
