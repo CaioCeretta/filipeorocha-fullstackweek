@@ -136,6 +136,8 @@ const ServiceItem = ({ service, barbershop }: ServiceItemProps) => {
 
   const getTimeList = (bookings: Booking[]) => {
 
+    //TODO, do not show times in the past
+
     return TIME_LIST.filter(time => {
       const hour = Number(time.split(":")[0])
       const minutes = Number(time.split(":")[1])
