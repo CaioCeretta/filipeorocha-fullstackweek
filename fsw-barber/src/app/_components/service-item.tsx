@@ -54,16 +54,15 @@ const ServiceItem = ({ service, barbershop }: ServiceItemProps) => {
   const [dayBookings, setDayBookings] = useState<Booking[]>([])
 
   useEffect(() => {
-
-    const fetchBookings = async () => {
-      if (!selectedDay) return;
-      const bookings = await getBookings({ date: selectedDay, serviceId: service.id })
+    const fetch = async () => {
+      if (!selectedDay) return
+      const bookings = await getBookings({
+        date: selectedDay,
+        serviceId: service.id,
+      })
       setDayBookings(bookings)
     }
-
-    console.log(dayBookings)
-    fetchBookings()
-
+    fetch()
   }, [selectedDay, service.id])
 
   const handleDateSelect = (date: Date | undefined) => {
