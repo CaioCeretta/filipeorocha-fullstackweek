@@ -107,4 +107,26 @@ PLUS the user.id. like this
   }
 
 
+## Next auth
 
+If we would like to use the auth user inside a server component, we are unable to uitlize the useSession, we should use
+the getServerSession() function and pass to it the authorization options, so, for it, we must create a file, with whichever
+name we want, inside the lib, for example, and create a constant named authOptions and use the code we used inside the
+NextAuth function, now, on the api we call the authOptions we just created and use it on other places we need the same
+authorization.
+
+One thing we did, was to get the userId from our auth session, we tweaked a little the function when we created the session
+by adding this to the authOptions
+
+  callbacks: {
+    async session({ session, user }) {
+      session.user = {
+        ...session.user,
+        id: user.id
+      } as any
+
+      return session
+    }
+
+  we are spreading everything from the session we get when we create and add the id of the user in the database as
+  the key id
