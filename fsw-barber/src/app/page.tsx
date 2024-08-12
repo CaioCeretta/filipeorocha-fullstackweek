@@ -4,25 +4,47 @@ import Header from './_components/header'
 
 import { Button } from './_components/ui/button'
 
-import { Link, SearchIcon, Sheet } from 'lucide-react'
 import Image from 'next/image'
+import Link from 'next/link'
 import BarberShopItem from './_components/barbershop-item'
 import BookingItem from './_components/booking-item'
-import { Input } from './_components/ui/input'
+import Search from './_components/search'
 import { quickSearchOptions } from './_constants/search'
 import { db } from './_lib/prisma'
-import Search from './_components/search'
-import { SheetClose } from './_components/ui/sheet'
 
 
 export default async function Home() {
 
-  const barbershops = await db.barbershop.findMany({})
+  const barbershops = await db.barbershop.findMany({
+    include: {
+      services: true
+    }
+  })
   const popularBarbershops = await db.barbershop.findMany({
     orderBy: {
       name: 'desc'
+    },
+    include: {
+      services: true
     }
   })
+
+  const serializedBarbershops = barbershops.map(barbershop => ({
+    ...barbershop,
+    services: barbershop.services.map((service) => ({
+      ...service,
+      price: service.price.toString()
+    }))
+  }))
+
+  const serializedPopularBarbershops = popularBarbershops.map(barbershop => ({
+    ...barbershop,
+    services: barbershop.services.map((service) => ({
+      ...service,
+      price: service.price.toString()
+    }))
+  }))
+
 
 
   return (
@@ -36,19 +58,27 @@ export default async function Home() {
         <p>Monday, August 5th. 2024</p>
         {/* Search */}
         <Search />
+
         {/* Quick Search */}
-        
         <div className="mt-6 flex items-center gap-3 overflow-x-scroll [&::-webkit-scrollbar]:hidden">
-          {quickSearchOptions.map(option => (
-              <Button className='gap-2' variant={'secondary'} >
-                <Link href={`/barbershops?service=${option.title}`}>
-                  <Image src={option.imageUrl} width={16} height={16} alt={option.title} />
-                  {option.title}
-                </Link>
-              </Button>
+          {quickSearchOptions.map((option) => (
+            <Button
+              key={option.title}
+              className='gap-2'
+              variant={'secondary'}
+              asChild
+            >
+              <Link href={`/barbershops?service=${option.title}`}>
+                <Image
+                  src={option.imageUrl} 
+                  width={16}
+                  height={16} 
+                  alt={option.title} 
+                />
+                {option.title}
+              </Link>
+            </Button>
           ))}
-
-
         </div>
 
 
@@ -58,23 +88,24 @@ export default async function Home() {
             alt="Book with the best barbers in the region"
             src="/banner-01.png"
             fill
-            className="rounded-xl bg-center object-cover"
+            className="rounded-xl w-100 object-cover"
           />
         </div>
+
 
         {/* Bookings */}
         <BookingItem />
 
         <h2 className='mb-3 mt-6 text-xs font-bold uppercase text-gray-400'>Recommended</h2>
         <div className='flex gap-4 overflow-auto [&::-webkit-scrollbar]:hidden'>
-          {barbershops.map(barbershop => (
+          {serializedBarbershops.map(barbershop => (
             <BarberShopItem key={barbershop.id} barbershop={barbershop} />
           ))}
         </div>
 
         <h2 className='mb-3 mt-6 text-xs font-bold uppercase text-gray-400'>Popular Barbershops</h2>
         <div className='flex gap-4 overflow-auto [&::-webkit-scrollbar]:hidden'>
-          {popularBarbershops.map(barbershop => (
+          {serializedPopularBarbershops.map(barbershop => (
             <BarberShopItem key={barbershop.id} barbershop={barbershop} />
           ))}
         </div>
