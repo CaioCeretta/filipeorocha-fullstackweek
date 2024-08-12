@@ -74,9 +74,11 @@ const SidebarSheet = () => {
           <HomeIcon size={18} />
           Start
         </Button>
-        <Button className='justify-start gap-2' variant={'ghost'}>
-          <CalendarIcon size={18} />
-          Bookings
+        <Button className='justify-start gap-2' variant={'ghost'} asChild>
+          <Link href="/bookings">
+            <CalendarIcon size={18} />
+            Bookings
+          </Link>
         </Button>
 
       </div>
@@ -95,7 +97,7 @@ const SidebarSheet = () => {
 
       </div>
 
-      { session &&
+      {session &&
         <div className='flex flex-col gap-2 py-5'>
           <Button variant={'ghost'} className='justify-start gap-2'
             onClick={handleLogOutClick}>
