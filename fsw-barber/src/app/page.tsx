@@ -11,9 +11,13 @@ import BookingItem from './_components/booking-item'
 import Search from './_components/search'
 import { quickSearchOptions } from './_constants/search'
 import { db } from './_lib/prisma'
+import { getServerSession } from 'next-auth'
+import { authOptions } from './_lib/auth'
 
 
 export default async function Home() {
+
+  const session = await getServerSession(authOptions)
 
   const barbershops = await db.barbershop.findMany({
     include: {
@@ -45,6 +49,18 @@ export default async function Home() {
     }))
   }))
 
+  const bookings = session?.user ? await db.booking.findMany({
+    where: {
+      userId: session.user.id
+    },
+    include: {
+      service: {
+        include: {
+          barbershop: true
+        }
+      }
+    }
+  }) : []
 
 
   return (
@@ -70,10 +86,10 @@ export default async function Home() {
             >
               <Link href={`/barbershops?service=${option.title}`}>
                 <Image
-                  src={option.imageUrl} 
+                  src={option.imageUrl}
                   width={16}
-                  height={16} 
-                  alt={option.title} 
+                  height={16}
+                  alt={option.title}
                 />
                 {option.title}
               </Link>
@@ -94,8 +110,15 @@ export default async function Home() {
 
 
         {/* Bookings */}
-        <BookingItem />
+        <h2 className='mb-3 mt-6 text-xs font-bold uppercase text-gray-400'>Bookings</h2>
+        <div className='flex overflow-x-auto gap-3 [&::-webkit-scrollbar]:hidden'>
+          {bookings.map(booking => (
+            <BookingItem booking={booking} />
+          ))}
+        </div>
 
+
+        {/* Barbershops */}
         <h2 className='mb-3 mt-6 text-xs font-bold uppercase text-gray-400'>Recommended</h2>
         <div className='flex gap-4 overflow-auto [&::-webkit-scrollbar]:hidden'>
           {serializedBarbershops.map(barbershop => (
