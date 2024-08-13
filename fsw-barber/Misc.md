@@ -182,3 +182,9 @@ by adding this to the authOptions
 
   The instructor created interfaces for function where we receive more than one parameter, then it's a single object as
   a parameter, it will ensure type safety and improve legibility 
+
+  # Deployment
+
+  Besides running the migrations, we also need to utilize the npx prisma generate, which is necessary for the app to run
+  with the db, and also on the package.json, we need to add that prisma generate to the script husky, the prepare
+  runs AFTER the libraries were installed.
