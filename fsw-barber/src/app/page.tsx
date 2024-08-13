@@ -123,14 +123,14 @@ export default async function Home() {
         <h2 className='mb-3 mt-6 text-xs font-bold uppercase text-gray-400'>Recommended</h2>
         <div className='flex gap-4 overflow-auto [&::-webkit-scrollbar]:hidden'>
           {serializedBarbershops.map(barbershop => (
-            <BarberShopItem key={barbershop.id} barbershop={barbershop} />
+              <BarberShopItem key={barbershop.id} barbershop={barbershop} />
           ))}
         </div>
 
         <h2 className='mb-3 mt-6 text-xs font-bold uppercase text-gray-400'>Popular Barbershops</h2>
         <div className='flex gap-4 overflow-auto [&::-webkit-scrollbar]:hidden'>
           {serializedPopularBarbershops.map(barbershop => (
-            <BarberShopItem key={barbershop.id} barbershop={barbershop} />
+              <BarberShopItem key={barbershop.id} barbershop={barbershop} />
           ))}
         </div>
 
