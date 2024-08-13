@@ -177,3 +177,8 @@ by adding this to the authOptions
   related to that service, so it also includes the barbershop from the service related to that booking
 
   this will tell typescript, that when a service is booked, the booking must have its service and its barbershop included
+
+  ## Create interface for function parameters
+
+  The instructor created interfaces for function where we receive more than one parameter, then it's a single object as
+  a parameter, it will ensure type safety and improve legibility 
