@@ -13,6 +13,7 @@ import { quickSearchOptions } from './_constants/search'
 import { db } from './_lib/prisma'
 import { getServerSession } from 'next-auth'
 import { authOptions } from './_lib/auth'
+import { format } from 'date-fns'
 
 
 export default async function Home() {
@@ -70,8 +71,8 @@ export default async function Home() {
 
       <div className="p-5">
         {/* Text */}
-        <h2 className="text-xl">Hello, Caio</h2>
-        <p>Monday, August 5th. 2024</p>
+        <h2 className="text-xl my-2"> {session?.user ? `Hello ${session?.user.name}` : 'Welcome'}</h2>
+        <p className='text-xl my-2'>{format(new Date(), 'eeee, MMMM d, yyyy')}</p>
         {/* Search */}
         <Search />
 
