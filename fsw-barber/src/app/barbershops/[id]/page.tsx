@@ -89,7 +89,7 @@ const BarbershopPage = async ({ params }: { params: { id: 'string' } }) => {
             <h2 className="text-xs font-bold uppercase text-gray-400">Services</h2>
             <div className="space-y-4">
               {barbershop.services.map(service => (
-                <ServiceItem key={service.id} barbershop={barbershop} service={service} />
+                <ServiceItem key={service.id} barbershop={barbershop} service={JSON.parse(JSON.stringify(service))} />
               ))}
             </div>
           </div>

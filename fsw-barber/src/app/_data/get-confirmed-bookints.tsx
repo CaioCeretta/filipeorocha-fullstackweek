@@ -1,15 +1,12 @@
-'use client'
+"use server"
 
-import { useSession } from "next-auth/react";
 import { db } from "../_lib/prisma";
 import { getServerSession } from "next-auth";
 import { authOptions } from "../_lib/auth";
 
-export default async function getConfirmedBookings() {
-
+export const getConfirmedBookings = async () => {
   const session = await getServerSession(authOptions)
-
-  if (!session) return
+  if (!session?.user) return []
 
 
   return db.booking.findMany({

@@ -1,20 +1,13 @@
-import { useSession } from "next-auth/react";
-import Header from "../_components/header";
-import { db } from "../_lib/prisma";
-import { getServerSession } from "next-auth";
-import { authOptions } from "../_lib/auth";
-import { notFound } from "next/navigation";
 import BookingItem from "../_components/booking-item";
-import getConfirmedBookings from "../_data/get-confirmed-bookints";
+import Header from "../_components/header";
 import { getConcludedBookings } from "../_data/get-concluded-bookints";
+import { getConfirmedBookings } from "../_data/get-confirmed-bookints";
 
 const Bookings = async () => {
 
   const concludedBookings = await getConcludedBookings()
 
   const confirmedBookings = await getConfirmedBookings()
-
-
 
   return (
     <>
@@ -37,7 +30,7 @@ const Bookings = async () => {
             <h2 className="mb-3 mt-6 text-xs font-bold uppercase text-gray-400">
               Concluded
             </h2>
-            {concludedBookings.map(booking => <BookingItem booking={booking} key={booking.id} />)}
+            {concludedBookings.map(booking => <BookingItem booking={JSON.parse(JSON.stringify(booking))} key={booking.id} />)}
           </>
         )}
       </div>
