@@ -14,6 +14,8 @@ import { db } from './_lib/prisma'
 import { getServerSession } from 'next-auth'
 import { authOptions } from './_lib/auth'
 import { format } from 'date-fns'
+import { getConfirmedBookings } from './_data/get-confirmed-bookints'
+import { getConcludedBookings } from './_data/get-concluded-bookints'
 
 
 export default async function Home() {
@@ -33,6 +35,10 @@ export default async function Home() {
       services: true
     }
   })
+
+  const confirmedBookings = await getConfirmedBookings()
+
+  const concludedBookings = await getConcludedBookings()
 
   // const serializedBarbershops = barbershops.map(barbershop => ({
   //   ...barbershop,
@@ -111,15 +117,21 @@ export default async function Home() {
 
 
         {/* Bookings */}
+
+
+
+
         <h2 className='mb-3 mt-6 text-xs font-bold uppercase text-gray-400'>Bookings</h2>
         <div className='flex overflow-x-auto gap-3 [&::-webkit-scrollbar]:hidden'>
           {bookings.map(booking => (
-             /* By doing JSON.parse(JSON.stringify(booking)), we are transforming the object booking into a string and passing
-             the parsed json to the comoonent, this will resolve the error of only plain objects can be passed to
-             client components */
+            /* By doing JSON.parse(JSON.stringify(booking)), we are transforming the object booking into a string and passing
+            the parsed json to the comoonent, this will resolve the error of only plain objects can be passed to
+            client components */
             <BookingItem key={booking.id} booking={JSON.parse(JSON.stringify(booking))} />
           ))}
         </div>
+
+
 
 
 

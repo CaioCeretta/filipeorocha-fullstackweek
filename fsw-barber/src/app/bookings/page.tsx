@@ -13,8 +13,12 @@ const Bookings = async () => {
     <>
       <Header />
       <div className="p-5 space-y-3">
+        {confirmedBookings.length === 0 && getConcludedBookings.length === 0 && (
+          <p className="text-gray-400">You do not have any booking</p>
+        )}
+        
         <h1 className="font-bold text-xl">Bookings</h1>
-        {getConfirmedBookings.length > 0 && (
+        {confirmedBookings.length > 0 && (
           <>
             <h2 className="mb-3 mt-6 text-xs font-bold uppercase text-gray-400">
               Confirmed

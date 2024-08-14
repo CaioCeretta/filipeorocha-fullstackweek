@@ -188,3 +188,58 @@ by adding this to the authOptions
   Besides running the migrations, we also need to utilize the npx prisma generate, which is necessary for the app to run
   with the db, and also on the package.json, we need to add that prisma generate to the script husky, the prepare
   runs AFTER the libraries were installed.
+
+  ## Redundant date
+
+  One thing we faced was, on a booking, we had the hours and minutes, but whenever one of them changed, the state of
+  selectedTime or the selectedDate also changed. So in this case, where we have a data, that changes based on the state,
+  
+  So when in this case, where we have a data, derived from two or more states, we can use useMemo.
+
+  So by creatinng this useMemo
+
+   const selectedDate = useMemo(() => {
+    if(!selectedDay || !selectedTime) return
+    return set(selectedDay, {
+      hours: Number(selectedTime?.split(":")[0]),
+      minutes: Number(selectedTime?.split(":")[1])
+  })
+          
+  }, [selectedDay, selectedTime])
+
+  we won't have to on every render create another variable hours and other variable minutes if none of these states changed
+
+  now we can remove
+
+  if (!selectedDay || !selectedTime) return
+
+      const hour = Number(selectedTime?.split(":")[0])
+      const minutes = Number(selectedTime?.split(":")[1])
+      const newDate = set(selectedDay,
+        {
+          minutes: minutes,
+          hours: hour
+        }
+      )
+
+      this from the booking creation and just use the
+
+      if(!selectedDate)
+
+and change
+
+    selectedDate={set(selectedDay, {
+      hours: Number(selectedTime?.split(":")[0]),
+      minutes: Number(selectedTime?.split(":")[1])
+    })}
+
+to
+
+selectedDate && (
+                    <div className="py-5 px-5">
+                      <BookingSummary
+                        service={service}
+                        barbershop={barbershop}
+                        selectedDate={selectedDate}
+                      />
+                    </div>

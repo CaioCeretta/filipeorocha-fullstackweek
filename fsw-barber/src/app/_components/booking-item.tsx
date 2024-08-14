@@ -14,6 +14,7 @@ import { Sheet, SheetClose, SheetContent, SheetFooter, SheetHeader, SheetTitle, 
 import { deleteBooking } from "../_actions/delete-booking";
 import { toast } from "sonner";
 import { useState } from "react";
+import BookingSummary from "./booking-summary";
 
 interface BookingItemProps {
   booking: Prisma.BookingGetPayload<{
@@ -44,7 +45,7 @@ const BookingItem = ({ booking }: BookingItemProps) => {
       await deleteBooking(booking.id)
       setIsSheetOpen(false)
       toast.success('Booking successfully canceled')
-    } catch(error) {
+    } catch (error) {
       console.log(error)
       toast.error('Error cancelling booking, try again!')
     }
@@ -110,39 +111,13 @@ const BookingItem = ({ booking }: BookingItemProps) => {
 
         </div>
 
-        <Card className="mt-3 mb-6">
-          <CardContent className="p-3 space-y-3">
-            <div className="flex justify-between items-center">
-              <h2 className="font-bold">{booking.service.name}</h2>
-              <p className="font-bold text-sm">{Intl.NumberFormat('en-US', {
-                style: 'currency',
-                currency: 'USD'
-              }).format(Number(booking.service.price))}</p>
-            </div>
-
-
-            <div className="flex justify-between items-center">
-              <h2 className="font-bold text-gray-400 text-sm">Date</h2>
-              <p className="font-bold text-gray-400 text-sm">
-                {format(booking.date, "MMMM dd")}
-              </p>
-            </div>
-
-            <div className="flex justify-between items-center">
-              <h2 className="font-bold text-gray-400 text-sm">Scheduled time</h2>
-              <p className="font-bold text-gray-400 text-sm">
-                {format(booking.date, "HH:mm")}
-              </p>
-            </div>
-
-            <div className="flex justify-between items-center">
-              <h2 className="font-bold text-sm text-gray-400">Barbershop</h2>
-              <p className="font-bold text-gray-400 text-sm">
-                {barbershop.name}
-              </p>
-            </div>
-          </CardContent>
-        </Card>
+        <div className="mb-3 mt-9">
+          <BookingSummary
+            service={booking.service}
+            barbershop={barbershop}
+            selectedDate={booking.date}
+          />
+        </div>
 
         <div className="space-y-3">
 
@@ -155,41 +130,41 @@ const BookingItem = ({ booking }: BookingItemProps) => {
 
         <SheetFooter className="mt-6">
           <div className="flex items-center gap-3">
-          <SheetClose asChild>
-            <Button variant="outline" className="flex-1">
-              Return
-            </Button>
-          </SheetClose>
-          {isConfirmed && (
-            <Dialog>
-              <DialogTrigger className="w-full" asChild>
-                <Button variant="destructive" className="flex-1">
-                  Cancel Reservation
-                </Button>
-              </DialogTrigger>
-              <DialogContent className="w-[0%]">
-                <DialogHeader>
-                  <Title>Are you sure you want to cancel this reservation?</Title>
-                  <DialogDescription>
-                    This action cannot be undone.
-                  </DialogDescription>
-                </DialogHeader>
-
-                <DialogFooter className="w-[full] flex flex-row">
-                  <DialogClose asChild>
-                    <Button variant='secondary'>
-                      Cancel
-                    </Button>
-                  </DialogClose>
-                  <Button variant={"destructive"} onClick={handleCancelBookingClick}>
-                    Continue
+            <SheetClose asChild>
+              <Button variant="outline" className="flex-1">
+                Return
+              </Button>
+            </SheetClose>
+            {isConfirmed && (
+              <Dialog>
+                <DialogTrigger className="w-full" asChild>
+                  <Button variant="destructive" className="flex-1">
+                    Cancel Reservation
                   </Button>
-                </DialogFooter>
-              </DialogContent>
-            </Dialog>
-          )}
+                </DialogTrigger>
+                <DialogContent className="w-[0%]">
+                  <DialogHeader>
+                    <Title>Are you sure you want to cancel this reservation?</Title>
+                    <DialogDescription>
+                      This action cannot be undone.
+                    </DialogDescription>
+                  </DialogHeader>
+
+                  <DialogFooter className="w-[full] flex flex-row">
+                    <DialogClose asChild>
+                      <Button variant='secondary'>
+                        Cancel
+                      </Button>
+                    </DialogClose>
+                    <Button variant={"destructive"} onClick={handleCancelBookingClick}>
+                      Continue
+                    </Button>
+                  </DialogFooter>
+                </DialogContent>
+              </Dialog>
+            )}
           </div>
-          
+
         </SheetFooter>
       </SheetContent>
     </Sheet>

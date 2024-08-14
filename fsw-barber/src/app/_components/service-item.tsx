@@ -7,15 +7,16 @@ import { Calendar } from "./ui/calendar";
 import { Card, CardContent } from "./ui/card";
 import { Sheet, SheetClose, SheetContent, SheetFooter, SheetHeader, SheetTitle } from "./ui/sheet";
 
-import { addDays, format, isPast, isToday, set } from "date-fns";
+import { isPast, isToday, set } from "date-fns";
 import { enUS } from 'date-fns/locale';
 import { useSession } from "next-auth/react";
 import { useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
 import { createBooking } from "../_actions/create-booking";
 import { getBookings } from "../_actions/get-bookings";
-import { Dialog, DialogContent } from "./ui/dialog";
+import BookingSummary from "./booking-summary";
 import SignInDialog from "./sign-in-dialog";
+import { Dialog, DialogContent } from "./ui/dialog";
 
 interface ServiceItemProps {
   service: BarbershopService,
@@ -69,6 +70,21 @@ const ServiceItem = ({ service, barbershop }: ServiceItemProps) => {
     fetch()
   }, [selectedDay, service.id])
 
+  const selectedDate = useMemo(() => {
+    if(!selectedDay || !selectedTime) return
+    
+    const [hoursStr, minutesStr] = selectedTime.split(':')
+    const hours = Number(hoursStr)
+    const minutes = Number(minutesStr)
+
+    return set(selectedDay, {
+      hours,
+      minutes
+  })
+          
+  }, [selectedDay, selectedTime])
+
+
   const handleBookingClick = () => {
     if (session?.user) {
       return setBookingSheetsIsOpen(true)
@@ -94,30 +110,21 @@ const ServiceItem = ({ service, barbershop }: ServiceItemProps) => {
 
 
 
+
   const handleCreateBooking = async () => {
     // 1. Do not show booked hours
     // 2.Save the booking to the logged user
     // 3. Don't let user book if he's not logged in
 
     try {
-      if (!selectedDay || !selectedTime) return
+      if (!selectedDate) return
 
-      const hour = Number(selectedTime?.split(":")[0])
-      const minutes = Number(selectedTime?.split(":")[1])
-      const newDate = set(selectedDay,
-        {
-          minutes: minutes,
-          hours: hour
-        }
-      )
-
-      console.log(minutes, hour, newDate)
 
       await createBooking(
         {
           serviceId: service.id,
           userId: (session?.user as any).id,
-          date: newDate
+          date: selectedDate
         }
       )
 
@@ -205,17 +212,17 @@ const ServiceItem = ({ service, barbershop }: ServiceItemProps) => {
                 </Button>
                 <SheetContent className="px-0">
                   <SheetHeader>
-                    <SheetTitle>Make Reservation</SheetTitle>
+                    <SheetTitle className="text-center">Make Reservation</SheetTitle>
                   </SheetHeader>
 
-                  <div className="border-b border-solid py-5 w-full">
+                  <div className="border-b relative border-solid py-5 w-full">
                     <Calendar
                       mode="single"
                       fromDate={new Date()}
                       locale={enUS}
                       selected={selectedDay}
                       onSelect={handleDateSelect}
-                      className={'rounded-md shadow w-full'}
+                      className={'rounded-md shadow w-full ml-12'}
                     />
                   </div>
 
@@ -237,41 +244,13 @@ const ServiceItem = ({ service, barbershop }: ServiceItemProps) => {
                     </div>
                   )}
 
-                  {selectedTime && selectedDay && (
-                    <div className="py-5">
-                      <Card>
-                        <CardContent className="p-3 space-y-3">
-                          <div className="flex justify-between items-center">
-                            <h2 className="font-bold">{service.name}</h2>
-                            <p className="font-bold text-sm">{Intl.NumberFormat('en-US', {
-                              style: 'currency',
-                              currency: 'USD'
-                            }).format(Number(service.price))}</p>
-                          </div>
-
-
-                          <div className="flex justify-between items-center">
-                            <h2 className="font-bold text-gray-400 text-sm">Date</h2>
-                            <p className="font-bold text-gray-400 text-sm">
-                              {format(selectedDay, "MMMM dd")}
-                            </p>
-                          </div>
-
-                          <div className="flex justify-between items-center">
-                            <h2 className="font-bold text-gray-400 text-sm">Scheduled time</h2>
-                            <p className="font-bold text-gray-400 text-sm">
-                              {selectedTime}
-                            </p>
-                          </div>
-
-                          <div className="flex justify-between items-center">
-                            <h2 className="font-bold text-sm text-gray-400">Barbershop</h2>
-                            <p className="font-bold text-gray-400 text-sm">
-                              {barbershop.name}
-                            </p>
-                          </div>
-                        </CardContent>
-                      </Card>
+                  {selectedDate && (
+                    <div className="py-5 px-5">
+                      <BookingSummary
+                        service={service}
+                        barbershop={barbershop}
+                        selectedDate={selectedDate}
+                      />
                     </div>
                   )}
                   <SheetFooter className="px-5 mt-5">
