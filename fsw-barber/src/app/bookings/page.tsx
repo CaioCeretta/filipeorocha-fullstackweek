@@ -5,56 +5,14 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "../_lib/auth";
 import { notFound } from "next/navigation";
 import BookingItem from "../_components/booking-item";
+import getConfirmedBookings from "../_data/get-confirmed-bookints";
+import { getConcludedBookings } from "../_data/get-concluded-bookints";
 
 const Bookings = async () => {
-  const session = await getServerSession(authOptions)
 
-  if (!session) {
-    return notFound()
-  }
+  const concludedBookings = await getConcludedBookings()
 
-  if (!session.user) {
-    //TO DO show a login pop up
-    return notFound();
-  }
-
-  const confirmedBookings = await db.booking.findMany({
-    where: {
-      userId: session.user.id,
-      date: {
-        gte: new Date()
-      }
-    },
-    include: {
-      service: {
-        include: {
-          barbershop: true
-        }
-      }
-    },
-    orderBy: {
-      date: "asc"
-    }
-  })
-
-  const concludedBookings = await db.booking.findMany({
-    where: {
-      userId: session.user.id,
-      date: {
-        lt: new Date()
-      }
-    },
-    include: {
-      service: {
-        include: {
-          barbershop: true
-        }
-      }
-    },
-    orderBy: {
-      date: "asc"
-    }
-  })
+  const confirmedBookings = await getConfirmedBookings()
 
 
 
@@ -63,12 +21,12 @@ const Bookings = async () => {
       <Header />
       <div className="p-5 space-y-3">
         <h1 className="font-bold text-xl">Bookings</h1>
-        {confirmedBookings.length > 0 && (
+        {getConfirmedBookings.length > 0 && (
           <>
             <h2 className="mb-3 mt-6 text-xs font-bold uppercase text-gray-400">
               Confirmed
             </h2>
-            {confirmedBookings.map((booking) => (
+            {confirmedBookings!.map((booking) => (
               <BookingItem booking={booking} key={booking.id} />
             ))}
           </>

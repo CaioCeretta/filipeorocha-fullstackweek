@@ -31,7 +31,7 @@ const BookingItem = ({ booking }: BookingItemProps) => {
   const [isSheetOpen, setIsSheetOpen] = useState<boolean>(false)
 
   const handleSheetOpenChange = (isOpen: boolean) => {
-    setIsSheetOpen(true)
+    setIsSheetOpen(isOpen)
   }
 
 
@@ -153,7 +153,8 @@ const BookingItem = ({ booking }: BookingItemProps) => {
         </div>
 
 
-        <SheetFooter className="mt-6 flex items-center">
+        <SheetFooter className="mt-6">
+          <div className="flex items-center gap-3">
           <SheetClose asChild>
             <Button variant="outline" className="flex-1">
               Return
@@ -166,7 +167,7 @@ const BookingItem = ({ booking }: BookingItemProps) => {
                   Cancel Reservation
                 </Button>
               </DialogTrigger>
-              <DialogContent className="w-[100%]">
+              <DialogContent className="w-[0%]">
                 <DialogHeader>
                   <Title>Are you sure you want to cancel this reservation?</Title>
                   <DialogDescription>
@@ -187,6 +188,8 @@ const BookingItem = ({ booking }: BookingItemProps) => {
               </DialogContent>
             </Dialog>
           )}
+          </div>
+          
         </SheetFooter>
       </SheetContent>
     </Sheet>
